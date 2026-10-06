@@ -1,0 +1,299 @@
+/**
+ * @name Synthwave '84
+ * @author synth
+ * @version 1.0.0
+ * @description Deep purple, hot pink, neon magenta. Matches the CachyOS synthwave '84 desktop.
+ *
+ * Palette: bg #240037 · deep #0D0221 · fg #FF7EDB · magenta #FF00FF
+ *          purple #8F00FF · indigo #4B0080 · cyan #03EDF9 · green #72F1B8
+ *          yellow #F3E70F · red #FE4450 · dim #B57EDB
+ * Selected row follows kitty: dark text on hot-pink.
+ */
+
+:root {
+    --sw-bg: #240037;
+    --sw-deep: #0d0221;
+    --sw-mid: #16032e;
+    --sw-raised: #2d0848;
+    --sw-raised-2: #3a0a5c;
+    --sw-indigo: #4b0080;
+    --sw-fg: #ff7edb;
+    --sw-dim: #b57edb;
+    --sw-magenta: #ff00ff;
+    --sw-purple: #8f00ff;
+    --sw-cyan: #03edf9;
+    --sw-green: #72f1b8;
+    --sw-yellow: #f3e70f;
+    --sw-red: #fe4450;
+    --sw-lilac: #b084eb;
+    --sw-white: #ffffff;
+}
+
+.theme-dark,
+.theme-light,
+.visual-refresh,
+body {
+    --background-primary: var(--sw-bg) !important;
+    --background-secondary: var(--sw-mid) !important;
+    --background-secondary-alt: var(--sw-deep) !important;
+    --background-tertiary: var(--sw-deep) !important;
+    --background-floating: var(--sw-raised) !important;
+    --background-accent: var(--sw-indigo) !important;
+    --background-mobile-primary: var(--sw-bg) !important;
+    --background-mobile-secondary: var(--sw-mid) !important;
+    --background-modifier-hover: rgba(255, 126, 219, 0.08) !important;
+    --background-modifier-active: rgba(255, 0, 255, 0.16) !important;
+    --background-modifier-selected: rgba(255, 126, 219, 0.16) !important;
+    --background-mentioned: rgba(243, 231, 15, 0.14) !important;
+    --background-mentioned-hover: rgba(243, 231, 15, 0.22) !important;
+    --background-message-hover: rgba(255, 126, 219, 0.05) !important;
+    --background-message-highlight: rgba(255, 0, 255, 0.1) !important;
+    --channeltextarea-background: var(--sw-deep) !important;
+    --deprecated-card-bg: var(--sw-mid) !important;
+    --deprecated-card-editable-bg: var(--sw-deep) !important;
+    --deprecated-text-input-bg: var(--sw-deep) !important;
+    --deprecated-text-input-border: var(--sw-indigo) !important;
+    --deprecated-text-input-border-hover: var(--sw-magenta) !important;
+
+    --background-base-lowest: var(--sw-deep) !important;
+    --background-base-lower: var(--sw-mid) !important;
+    --background-base-low: var(--sw-bg) !important;
+    --background-surface-high: var(--sw-raised) !important;
+    --background-surface-higher: var(--sw-raised-2) !important;
+    --background-surface-highest: #4a0d72 !important;
+    --bg-surface-raised: var(--sw-raised) !important;
+    --bg-surface-overlay-tmp: var(--sw-mid) !important;
+    --home-background: var(--sw-deep) !important;
+    --chat-background: var(--sw-bg) !important;
+    --chat-background-default: var(--sw-bg) !important;
+    --app-frame-background: var(--sw-deep) !important;
+    --card-background-default: var(--sw-raised) !important;
+    --background-code: var(--sw-deep) !important;
+    --background-mod-subtle: rgba(255, 126, 219, 0.06) !important;
+    --background-mod-muted: rgba(255, 126, 219, 0.08) !important;
+    --background-mod-normal: var(--sw-raised) !important;
+    --background-mod-strong: var(--sw-raised-2) !important;
+    --background-scrim: rgba(13, 2, 33, 0.78) !important;
+
+    --text-normal: var(--sw-fg) !important;
+    --text-muted: var(--sw-dim) !important;
+    --text-default: var(--sw-fg) !important;
+    --text-strong: var(--sw-white) !important;
+    --text-subtle: var(--sw-lilac) !important;
+    --text-link: var(--sw-cyan) !important;
+    --text-brand: var(--sw-magenta) !important;
+    --text-positive: var(--sw-green) !important;
+    --text-warning: var(--sw-yellow) !important;
+    --text-danger: var(--sw-red) !important;
+    --header-primary: var(--sw-fg) !important;
+    --header-secondary: var(--sw-dim) !important;
+    --interactive-normal: var(--sw-lilac) !important;
+    --interactive-hover: var(--sw-fg) !important;
+    --interactive-active: var(--sw-white) !important;
+    --interactive-muted: #7a5a96 !important;
+    --interactive-text-default: var(--sw-lilac) !important;
+    --interactive-text-hover: var(--sw-fg) !important;
+    --interactive-text-active: var(--sw-white) !important;
+    --interactive-icon-default: var(--sw-purple) !important;
+    --interactive-icon-hover: var(--sw-fg) !important;
+    --channels-default: var(--sw-lilac) !important;
+    --channel-icon: var(--sw-purple) !important;
+    --chat-text-muted: var(--sw-dim) !important;
+    --text-feedback-info: var(--sw-cyan) !important;
+    --text-feedback-positive: var(--sw-green) !important;
+    --text-feedback-warning: var(--sw-yellow) !important;
+    --text-feedback-critical: var(--sw-red) !important;
+
+    --brand-experiment: var(--sw-magenta) !important;
+    --brand-experiment-560: var(--sw-purple) !important;
+    --brand-500: var(--sw-magenta) !important;
+    --brand-360: var(--sw-purple) !important;
+    --brand-260: var(--sw-indigo) !important;
+    --control-brand-foreground: var(--sw-fg) !important;
+    --control-brand-foreground-new: var(--sw-fg) !important;
+    --focus-primary: var(--sw-magenta) !important;
+    --logo-primary: var(--sw-magenta) !important;
+    --button-secondary-background: var(--sw-indigo) !important;
+    --button-outline-primary-text: var(--sw-fg) !important;
+    --button-outline-brand-border-active: var(--sw-magenta) !important;
+
+    --status-positive: var(--sw-green) !important;
+    --status-online: var(--sw-green) !important;
+    --status-warning: var(--sw-yellow) !important;
+    --status-danger: var(--sw-red) !important;
+    --status-speaking: var(--sw-cyan) !important;
+    --info-positive-foreground: var(--sw-green) !important;
+    --info-warning-foreground: var(--sw-yellow) !important;
+    --info-danger-foreground: var(--sw-red) !important;
+    --online: var(--sw-green) !important;
+    --dnd: var(--sw-red) !important;
+    --idle: var(--sw-yellow) !important;
+    --streaming: var(--sw-purple) !important;
+    --offline: #7a5a96 !important;
+
+    --border-subtle: rgba(143, 0, 255, 0.45) !important;
+    --border-strong: var(--sw-magenta) !important;
+    --border-normal: var(--sw-indigo) !important;
+    --border-focus: var(--sw-magenta) !important;
+    --app-frame-border: var(--sw-indigo) !important;
+    --background-feedback-info: rgba(3, 237, 249, 0.12) !important;
+    --background-feedback-positive: rgba(114, 241, 184, 0.12) !important;
+    --background-feedback-warning: rgba(243, 231, 15, 0.14) !important;
+    --background-feedback-critical: rgba(254, 68, 80, 0.16) !important;
+
+    --scrollbar-thin-thumb: var(--sw-purple) !important;
+    --scrollbar-thin-track: transparent !important;
+    --scrollbar-auto-thumb: var(--sw-magenta) !important;
+    --scrollbar-auto-track: var(--sw-deep) !important;
+    --scrollbar-auto-scrollbar-color-thumb: var(--sw-magenta) !important;
+    --scrollbar-auto-scrollbar-color-track: var(--sw-deep) !important;
+
+    --font-primary: "3270 Nerd Font", "Fira Sans", sans-serif !important;
+    --font-display: "3270 Nerd Font", "Fira Sans", sans-serif !important;
+    --font-headline: "3270 Nerd Font", "Fira Sans", sans-serif !important;
+    --font-code: "3270 Nerd Font Mono", "3270 Nerd Font", monospace !important;
+
+    --elevation-low: 0 2px 8px rgba(255, 0, 255, 0.08) !important;
+    --elevation-high: 0 8px 24px rgba(13, 2, 33, 0.7) !important;
+    color-scheme: dark;
+}
+
+html,
+body {
+    background: var(--sw-deep) !important;
+    color: var(--sw-fg);
+    font-family: "3270 Nerd Font", "Fira Sans", sans-serif !important;
+}
+
+/* Selected channel — kitty active tab: #240037 on #FF7EDB */
+[class*="modeSelected"] {
+    background-color: #ff7edb !important;
+    color: #240037 !important;
+    box-shadow:
+        inset 3px 0 0 #ff00ff,
+        0 0 14px rgba(255, 0, 255, 0.45) !important;
+}
+
+[class*="modeSelected"] [class*="name"],
+[class*="modeSelected"] [class*="icon"],
+[class*="modeSelected"] svg {
+    color: #240037 !important;
+    fill: #240037 !important;
+}
+
+/* Inline @mentions: yellow chip, dark text */
+.mention {
+    background-color: #f3e70f !important;
+    color: #240037 !important;
+    border-radius: 3px;
+    font-weight: 700;
+}
+
+/* Mentioned message bar */
+[class*="mentioned"]:not(.mention) {
+    background-color: rgba(243, 231, 15, 0.1) !important;
+    box-shadow: inset 2px 0 0 #f3e70f !important;
+}
+
+a[href] {
+    color: #03edf9;
+}
+
+a[href]:hover {
+    color: #ff7edb;
+    text-shadow: 0 0 8px #ff00ff;
+}
+
+code,
+pre,
+[class*="codeBlock"],
+[class*="markup"] code {
+    font-family: "3270 Nerd Font Mono", "3270 Nerd Font", monospace !important;
+    background: #0d0221 !important;
+    color: #ff7edb !important;
+    border: 1px solid #4b0080 !important;
+    border-radius: 4px;
+}
+
+.hljs-keyword,
+.hljs-selector-tag {
+    color: #ff00ff !important;
+}
+
+.hljs-string,
+.hljs-attr,
+.hljs-attribute {
+    color: #f3e70f !important;
+}
+
+.hljs-number,
+.hljs-literal,
+.hljs-meta {
+    color: #03edf9 !important;
+}
+
+.hljs-comment,
+.hljs-quote {
+    color: #b57edb !important;
+}
+
+.hljs-function,
+.hljs-title,
+.hljs-title.function_ {
+    color: #72f1b8 !important;
+}
+
+.hljs-built_in,
+.hljs-type,
+.hljs-class {
+    color: #b084eb !important;
+}
+
+* {
+    scrollbar-color: #8f00ff #0d0221;
+}
+
+::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: #0d0221;
+}
+
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, #ff00ff, #8f00ff);
+    border-radius: 8px;
+    border: 2px solid #0d0221;
+}
+
+:focus-visible {
+    outline: 2px solid #ff00ff !important;
+    outline-offset: 1px;
+}
+
+[class*="numberBadge"],
+[class*="mentionBadge"] {
+    background-color: #f3e70f !important;
+    color: #240037 !important;
+}
+
+/* Brand-filled buttons: magenta fill, dark text so they stay readable */
+[class*="colorBrand"][class*="lookFilled"] {
+    background-color: #ff00ff !important;
+    color: #240037 !important;
+}
+
+[class*="colorBrand"][class*="lookFilled"] * {
+    color: #240037 !important;
+}
+
+/* Chat box focus glow */
+[class*="channelTextArea"]:focus-within [class*="scrollableContainer"],
+[class*="channelTextArea"]:focus-within [class*="inner"] {
+    border-color: #ff00ff !important;
+    box-shadow:
+        0 0 0 1px #ff00ff,
+        0 0 14px rgba(255, 0, 255, 0.35) !important;
+}

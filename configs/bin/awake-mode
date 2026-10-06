@@ -1,0 +1,300 @@
+#!/usr/bin/env python3
+"""awake-mode: toggle KDE Plasma never-sleep / never-lock mode.
+
+Usage: awake-mode [on|off|toggle|status|ensure]
+  status prints ON or OFF and exits 0 when ON, 1 when OFF (for scripting).
+  ensure  reconciles state: if config says ON but the sleep inhibitor died,
+          it is restarted. Idempotent; safe to call from autostart/timers.
+
+How it works: ON holds a logind block-mode inhibitor on 'idle:sleep' via a
+detached `systemd-inhibit` process. 'sleep' vetoes ANY suspend request from
+unprivileged callers (including KDE PowerDevil, which proved it will ignore
+its own never-sleep profile config). 'idle' is required for screen-off:
+PowerDevil's policy agent (powerdevilpolicyagent.cpp) maps logind 'idle'
+inhibitors to its ChangeScreenSettings policy, which gates DPMS. A 'sleep'-
+only inhibitor lets the screen blank even while suspend stays vetoed.
+Belt-and-braces: ON also spawns a helper that holds an
+org.freedesktop.ScreenSaver inhibition over the session bus (the same API
+media players use). That inhibition is tied to the holder's bus connection,
+so a live process must hold it; the helper re-inhibits every 15s because
+kscreenlocker does not re-forward inhibitions when PowerDevil restarts.
+The KDE config keys are written as a third layer for lock/DPMS cosmetics.
+"""
+import os
+import re
+import signal
+import subprocess
+import sys
+
+KSCREENLOCKER = os.path.expanduser("~/.config/kscreenlockerrc")
+POWERMGMT = os.path.expanduser("~/.config/powermanagementprofilesrc")
+STATE_DIR = os.path.expanduser("~/.local/state/awake-mode")
+PIDFILE = os.path.join(STATE_DIR, "inhibitor.pid")
+SS_PIDFILE = os.path.join(STATE_DIR, "screensaver-inhibitor.pid")
+PROFILES = ["AC", "Battery", "LowBattery"]
+
+INHIBIT_CMD = [
+    "systemd-inhibit",
+    "--what=idle:sleep",
+    "--who=awake-mode",
+    "--why=Awake mode ON - suspend and screen-off vetoed",
+    "--mode=block",
+    "sleep", "infinity",
+]
+
+# Holds an org.freedesktop.ScreenSaver inhibition on the session bus.
+# The inhibition is bound to the holder's unique bus name, so the process
+# must stay alive. kscreenlocker refcounts inhibitions and only forwards
+# add/release to PowerDevil on 0->1 / 1->0 transitions, and it does NOT
+# re-forward when PowerDevil restarts — so every cycle we fully release
+# the old cookie before taking a new one, forcing a fresh forward.
+SS_HELPER = r"""
+import time
+import dbus
+
+bus = dbus.SessionBus()
+NAME = "org.freedesktop.ScreenSaver"
+PATH = "/org/freedesktop/ScreenSaver"
+cookie = None
+while True:
+    try:
+        proxy = bus.get_object(NAME, PATH)
+        iface = dbus.Interface(proxy, NAME)
+        if cookie is not None:
+            try:
+                iface.UnInhibit(cookie)
+            except Exception:
+                pass
+            cookie = None
+        cookie = iface.Inhibit("awake-mode", "Awake mode ON - screen-off vetoed")
+    except Exception:
+        time.sleep(5)
+        continue
+    time.sleep(15)
+"""
+
+
+def kw(args):
+    subprocess.run(["kwriteconfig6", *args], check=True)
+
+
+# --- inhibitor management -------------------------------------------------
+
+def _read_pid(path):
+    try:
+        with open(path) as f:
+            return int(f.read().strip())
+    except (FileNotFoundError, ValueError):
+        return None
+
+
+def _pid_alive(pid, marker):
+    if not pid:
+        return False
+    try:
+        with open(f"/proc/{pid}/cmdline", "rb") as f:
+            return marker.encode() in f.read()
+    except (FileNotFoundError, PermissionError):
+        return False
+
+
+def inhibitor_running():
+    return _pid_alive(_read_pid(PIDFILE), "systemd-inhibit")
+
+
+def screensaver_running():
+    return _pid_alive(_read_pid(SS_PIDFILE), "org.freedesktop.ScreenSaver")
+
+
+def _spawn(cmd, pidfile):
+    os.makedirs(STATE_DIR, exist_ok=True)
+    proc = subprocess.Popen(
+        cmd,
+        start_new_session=True,
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.DEVNULL,
+    )
+    with open(pidfile, "w") as f:
+        f.write(str(proc.pid))
+
+
+def start_inhibitor():
+    if inhibitor_running():
+        return
+    _spawn(INHIBIT_CMD, PIDFILE)
+
+
+def start_screensaver_inhibitor():
+    if screensaver_running():
+        return
+    _spawn(["python3", "-c", SS_HELPER], SS_PIDFILE)
+
+
+def _stop(pidfile):
+    pid = _read_pid(pidfile)
+    if pid:
+        try:
+            os.killpg(pid, signal.SIGTERM)
+        except (ProcessLookupError, PermissionError):
+            try:
+                os.kill(pid, signal.SIGTERM)
+            except (ProcessLookupError, PermissionError):
+                pass
+    try:
+        os.remove(pidfile)
+    except FileNotFoundError:
+        pass
+
+
+def stop_inhibitor():
+    _stop(PIDFILE)
+
+
+def stop_screensaver_inhibitor():
+    _stop(SS_PIDFILE)
+
+
+# --- KDE config (belt-and-braces: lock/DPMS cosmetics) ---------------------
+
+def write_config_on():
+    kw(["--file", "kscreenlockerrc", "--group", "Daemon", "--key", "Autolock", "false"])
+    kw(["--file", "kscreenlockerrc", "--group", "Daemon", "--key", "LockOnResume", "false"])
+    for g in PROFILES:
+        kw(["--file", "powermanagementprofilesrc", "--group", g, "--group", "SuspendAndShutdown",
+            "--key", "AutoSuspendAction", "0"])
+        kw(["--file", "powermanagementprofilesrc", "--group", g, "--group", "SuspendAndShutdown",
+            "--key", "AutoSuspendIdleTimeoutSec", "0"])
+        kw(["--file", "powermanagementprofilesrc", "--group", g, "--group", "SuspendAndShutdown",
+            "--key", "PowerButtonAction", "0"])
+        kw(["--file", "powermanagementprofilesrc", "--group", g, "--group", "DPMSControl",
+            "--key", "idleTimeoutSec", "0"])
+        kw(["--file", "powermanagementprofilesrc", "--group", g, "--group", "DPMSControl",
+            "--key", "lockBeforeTurnOffScreen", "0"])
+        kw(["--file", "powermanagementprofilesrc", "--group", g, "--group", "DimDisplay",
+            "--key", "idleTimeoutSec", "0"])
+    reload_powerdevil()
+
+
+def strip_keys(path, section_re, key_re):
+    """Remove keys matching key_re from sections matching section_re; drop emptied sections."""
+    try:
+        with open(path) as f:
+            lines = f.read().splitlines(keepends=True)
+    except FileNotFoundError:
+        return
+    out, cur, kept = [], None, []
+
+    def flush2():
+        nonlocal kept
+        if cur is not None:
+            if re.match(section_re, cur):
+                body = [l for l in kept if l.strip() and not re.match(key_re, l)]
+                if body:
+                    out.append(cur)
+                    out.extend(body)
+            else:
+                out.append(cur)
+                out.extend(kept)
+        kept = []
+
+    for line in lines:
+        if re.match(r"^\s*\[", line):
+            flush2()
+            cur = line
+        elif cur is None:
+            out.append(line)
+        else:
+            kept.append(line)
+    flush2()
+    with open(path, "w") as f:
+        f.writelines(out)
+
+
+def strip_config():
+    strip_keys(KSCREENLOCKER, r"^\[Daemon\]", r"^(Autolock|LockOnResume)=")
+    strip_keys(POWERMGMT, r"^\[(AC|Battery|LowBattery)\]",
+               r"^(AutoSuspendAction|AutoSuspendIdleTimeoutSec|PowerButtonAction|idleTimeoutSec|lockBeforeTurnOffScreen)=")
+    reload_powerdevil()
+
+
+def reload_powerdevil():
+    subprocess.run(["systemctl", "--user", "restart", "plasma-powerdevil.service"], check=False)
+
+
+# --- state -----------------------------------------------------------------
+
+def config_says_on():
+    try:
+        with open(KSCREENLOCKER) as f:
+            return "Autolock=false" in f.read()
+    except FileNotFoundError:
+        return False
+
+
+def is_on():
+    # ON means: the user asked for it (config) — the inhibitor is enforced
+    # via ensure(). Tray/status reads this cheaply.
+    return config_says_on()
+
+
+def set_on():
+    write_config_on()
+    start_inhibitor()
+    start_screensaver_inhibitor()
+
+
+def set_off():
+    strip_config()
+    stop_inhibitor()
+    stop_screensaver_inhibitor()
+
+
+def ensure():
+    """Reconcile: config ON but an inhibitor dead -> restart it.
+    Config OFF but an inhibitor alive -> kill it."""
+    if config_says_on():
+        if not inhibitor_running():
+            start_inhibitor()
+        if not screensaver_running():
+            start_screensaver_inhibitor()
+    else:
+        if inhibitor_running():
+            stop_inhibitor()
+        if screensaver_running():
+            stop_screensaver_inhibitor()
+
+
+def main():
+    cmd = sys.argv[1] if len(sys.argv) > 1 else "toggle"
+    if cmd == "status":
+        on = is_on()
+        inh = inhibitor_running()
+        ss = screensaver_running()
+        print("ON" if on else "OFF")
+        if on and not inh:
+            print("WARNING: logind inhibitor not running - suspend NOT vetoed",
+                  file=sys.stderr)
+        if on and not ss:
+            print("WARNING: screensaver inhibitor not running - no fdo backup",
+                  file=sys.stderr)
+        sys.exit(0 if on else 1)
+    if cmd == "ensure":
+        ensure()
+        sys.exit(0)
+    if cmd == "toggle":
+        cmd = "off" if is_on() else "on"
+    if cmd == "on":
+        set_on()
+    elif cmd == "off":
+        set_off()
+    else:
+        print(__doc__)
+        sys.exit(2)
+    print("awake-mode:", "ON" if is_on() else "OFF",
+          "(logind: %s, screensaver: %s)"
+          % ("active" if inhibitor_running() else "none",
+             "active" if screensaver_running() else "none"))
+
+
+if __name__ == "__main__":
+    main()

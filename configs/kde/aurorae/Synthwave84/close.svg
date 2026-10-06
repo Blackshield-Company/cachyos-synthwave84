@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="119.46667" height="29.866667" viewBox="0 0 119.46667 29.866667">
+<g id="active-center" transform="translate(0.0,0)">
+<path d="M 9.533333749999999,9.533333749999999 L 20.33333375,20.33333375 M 20.33333375,9.533333749999999 L 9.533333749999999,20.33333375" fill="none" stroke="#FE4450" stroke-width="4.6" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 9.533333749999999,9.533333749999999 L 20.33333375,20.33333375 M 20.33333375,9.533333749999999 L 9.533333749999999,20.33333375" fill="none" stroke="#050506" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+<g id="hover-center" transform="translate(29.8666675,0)">
+<path d="M 9.533333749999999,9.533333749999999 L 20.33333375,20.33333375 M 20.33333375,9.533333749999999 L 9.533333749999999,20.33333375" fill="none" stroke="#FE4450" stroke-width="4.6" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 9.533333749999999,9.533333749999999 L 20.33333375,20.33333375 M 20.33333375,9.533333749999999 L 9.533333749999999,20.33333375" fill="none" stroke="#FF7EDB" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+<g id="pressed-center" transform="translate(59.733335,0)">
+<path d="M 9.533333749999999,9.533333749999999 L 20.33333375,20.33333375 M 20.33333375,9.533333749999999 L 9.533333749999999,20.33333375" fill="none" stroke="#7A0D18" stroke-width="4.6" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 9.533333749999999,9.533333749999999 L 20.33333375,20.33333375 M 20.33333375,9.533333749999999 L 9.533333749999999,20.33333375" fill="none" stroke="#3A0308" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+<g id="inactive-center" transform="translate(89.60000249999999,0)">
+<path d="M 9.533333749999999,9.533333749999999 L 20.33333375,20.33333375 M 20.33333375,9.533333749999999 L 9.533333749999999,20.33333375" fill="none" stroke="#4B0080" stroke-width="4.6" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 9.533333749999999,9.533333749999999 L 20.33333375,20.33333375 M 20.33333375,9.533333749999999 L 9.533333749999999,20.33333375" fill="none" stroke="#240037" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+</svg>

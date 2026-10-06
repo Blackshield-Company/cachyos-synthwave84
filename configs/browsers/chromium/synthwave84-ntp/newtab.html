@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Synthwave84</title>
+<style>
+  :root {
+    --bs-black: #1a0028;
+    --bs-steel: #3d1560;
+    --bs-bone: #ff7edb;
+    --bs-blood: #ff7edb;
+    --bs-gold: #f3e70f;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { height: 100%; }
+  body {
+    background: var(--bs-black) url("synthswing.png") no-repeat center center / cover fixed;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    padding-bottom: 12vh;
+    font-family: "3270 Nerd Font", serif;
+    color: var(--bs-bone);
+    overflow: hidden;
+  }
+  /* scrim so the bar and motto stay readable over the battle scene */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background: linear-gradient(180deg,
+      rgba(7, 7, 9, 0.25) 0%,
+      rgba(7, 7, 9, 0.05) 40%,
+      rgba(7, 7, 9, 0.55) 78%,
+      rgba(7, 7, 9, 0.8) 100%);
+    pointer-events: none;
+  }
+  form {
+    position: relative;
+    width: min(560px, 72vw);
+    display: flex;
+  }
+  input[type="text"] {
+    flex: 1;
+    background: rgba(13, 13, 17, 0.85);
+    backdrop-filter: blur(6px);
+    border: 1px solid var(--bs-steel);
+    border-bottom: 2px solid var(--bs-blood);
+    border-radius: 4px;
+    padding: 12px 16px;
+    font-family: inherit;
+    font-size: 17px;
+    color: var(--bs-bone);
+    outline: none;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  }
+  input[type="text"]::placeholder { color: #6b6f78; font-style: italic; }
+  input[type="text"]:focus {
+    border-color: var(--bs-blood);
+    box-shadow: 0 0 14px rgba(193, 18, 31, 0.35);
+  }
+  .motto {
+    position: relative;
+    margin-top: 2.2vh;
+    font-size: 13px;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: #8a8f9a;
+    text-shadow: 0 1px 4px rgba(7, 7, 9, 0.9);
+  }
+  .motto em { color: var(--bs-blood); font-style: normal; }
+</style>
+</head>
+<body>
+  <form action="https://www.google.com/search" method="get">
+    <input type="text" name="q" placeholder="Raise the standard. Ask." autofocus autocomplete="off">
+  </form>
+</body>
+</html>

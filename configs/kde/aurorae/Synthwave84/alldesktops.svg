@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="119.46667" height="29.866667" viewBox="0 0 119.46667 29.866667">
+<g id="active-center" transform="translate(0.0,0)">
+<circle cx="14.93333375" cy="14.93333375" r="4.6" fill="#050506" stroke="#FE4450" stroke-width="1.8"/>
+</g>
+<g id="hover-center" transform="translate(29.8666675,0)">
+<circle cx="14.93333375" cy="14.93333375" r="4.6" fill="#FF7EDB" stroke="#FE4450" stroke-width="1.8"/>
+</g>
+<g id="pressed-center" transform="translate(59.733335,0)">
+<circle cx="14.93333375" cy="14.93333375" r="4.6" fill="#3A0308" stroke="#7A0D18" stroke-width="1.8"/>
+</g>
+<g id="inactive-center" transform="translate(89.60000249999999,0)">
+<circle cx="14.93333375" cy="14.93333375" r="4.6" fill="#240037" stroke="#4B0080" stroke-width="1.8"/>
+</g>
+</svg>

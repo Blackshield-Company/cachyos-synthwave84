@@ -1,0 +1,10 @@
+ESP_PATH="/boot"
+# NOTE: install.sh phase_system rewrites root=UUID= to the live root filesystem
+# UUID at deploy time — this file's UUID is documentation, not source of truth.
+# (Hardcoding a stale UUID here caused the 2026-09-09 boot loop.)
+# EDID forge (this-is-the-wide skg-2560x1080.bin) intentionally NOT in the
+# persistent cmdline — it targets the ultrawide only, not the 2K primary.
+# Add drm.edid_firmware=<connector>:edid/skg-2560x1080.bin when the ultrawide
+# is attached (~/this-is-the-wide/scripts/install.sh).
+KERNEL_CMDLINE[default]+="quiet nowatchdog splash rw pcie_aspm=off rootflags=subvol=/@ root=UUID=REPLACE_AT_DEPLOY"
+BOOT_ORDER="*, *lts, *fallback, Snapshots"

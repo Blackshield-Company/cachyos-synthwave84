@@ -1,0 +1,13 @@
+# Re-forge Synthwave84 tray icons into Vesktop's app.asar after every
+# vesktop-bin upgrade (package updates overwrite the asar).
+# Install: sudo cp synthwave84-vesktop-tray.hook /etc/pacman.d/hooks/
+[Trigger]
+Operation = Install
+Operation = Upgrade
+Type = Package
+Target = vesktop-bin
+
+[Action]
+Description = Re-forging Synthwave84 Vesktop tray icons...
+When = PostTransaction
+Exec = /usr/bin/env ASAR_BIN=__HOME__/.hermes/hermes-agent/node_modules/.bin/asar /usr/bin/bash __HOME__/Projects/active/cachyos-synthwave84/configs/icons/custom/vesktop-tray/reforge-vesktop-tray.sh

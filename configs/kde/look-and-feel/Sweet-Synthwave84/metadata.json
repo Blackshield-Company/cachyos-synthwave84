@@ -1,0 +1,20 @@
+{
+    "KPackageStructure": "Plasma/LookAndFeel",
+    "KPlugin": {
+        "Authors": [
+            {
+                "Name": "synth"
+            }
+        ],
+        "Category": "Plasma Look And Feel",
+        "EnabledByDefault": true,
+        "Id": "Sweet-Synthwave84",
+        "License": "GPL 3+",
+        "Name": "Sweet Synthwave84",
+        "ServiceTypes": [
+            "Plasma/LookAndFeel"
+        ],
+        "Version": "1.0",
+        "Description": "Synthwave84 Mercenary — dark steel, blood-red cross potent."
+    }
+}

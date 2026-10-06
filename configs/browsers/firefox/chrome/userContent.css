@@ -1,0 +1,171 @@
+/* ============================================================
+   Synthwave84 — Firefox content pages (userContent.css)
+   Themes built-in pages: about:newtab, about:home,
+   about:privatebrowsing, reader mode, view-source accents.
+   Web content is NOT touched — this only styles about:* pages.
+   Palette canon: bg #240037 · deep #1a0028 · fg #ff7edb
+     dim #b084eb · crimson #ff7edb / #ff00ff / #8f00ff
+     steel #03edf9 · surface #3d1560 · bone #ffffff
+   ============================================================ */
+
+@-moz-document url(about:newtab), url(about:home) {
+  :root {
+    --sw-bg:        #240037;
+  --sw-bg-deep:   #1a0028;
+  --sw-bg-inact:  #2a0845;
+  --sw-fg:        #ff7edb;
+  --sw-fg-dim:    #b084eb;
+  --sw-crimson:   #ff7edb;
+  --sw-crimson-hi:#ff00ff;
+  --sw-crimson-lo:#8f00ff;
+  --sw-steel:     #03edf9;
+  --sw-surface:   #3d1560;
+  --sw-border:    #4b0080;
+  --sw-ok:        #72f1b8;
+  --sw-warn:      #f3e70f;
+  --sw-bone:      #ffffff;
+
+    --newtab-background-color: var(--sw-bg-deep) !important;
+    --newtab-text-primary-color: var(--sw-fg) !important;
+    --newtab-text-secondary-color: var(--sw-fg-dim) !important;
+    --newtab-card-background-color: var(--sw-bg) !important;
+    --newtab-border-primary-color: var(--sw-surface) !important;
+    --newtab-element-hover-color: var(--sw-surface) !important;
+    --newtab-element-active-color: var(--sw-crimson) !important;
+  }
+
+  body {
+    /* synthwave84 heater-shield art shipped alongside this file in chrome/ */
+    background: var(--sw-bg-deep) url("ntp_background.png") no-repeat center bottom / cover fixed !important;
+    color: var(--sw-fg) !important;
+  }
+
+  /* search box */
+  .search-wrapper .search-handoff-button,
+  .search-wrapper input {
+    background-color: var(--sw-bg) !important;
+    color: var(--sw-fg) !important;
+    border: 1px solid var(--sw-surface) !important;
+    border-radius: 10px !important;
+    caret-color: var(--sw-bone) !important;
+  }
+
+  .search-wrapper .search-handoff-button:focus,
+  .search-wrapper input:focus {
+    border-color: var(--sw-crimson) !important;
+    box-shadow: 0 0 10px rgba(224, 85, 95, 0.4) !important;
+  }
+
+  /* shortcut tiles */
+  .top-site-outer .top-site-inner {
+    background-color: var(--sw-bg) !important;
+    border: 1px solid var(--sw-bg) !important;
+  }
+
+  .top-site-outer:is(:hover, :focus, .active) .top-site-inner {
+    border-color: var(--sw-crimson) !important;
+    box-shadow: 0 0 10px rgba(224, 85, 95, 0.35) !important;
+  }
+
+  .top-site-outer .title {
+    color: var(--sw-fg) !important;
+  }
+
+  .top-site-outer .title .sponsored-label {
+    color: var(--sw-fg-dim) !important;
+  }
+
+  /* section headers */
+  .section-title span,
+  .section-title .section-title-text {
+    color: var(--sw-steel) !important;
+  }
+
+  /* pocket / stories cards */
+  .ds-card,
+  .card-outer {
+    background-color: var(--sw-bg) !important;
+    color: var(--sw-fg) !important;
+    border: 1px solid transparent !important;
+  }
+
+  .ds-card:hover,
+  .card-outer:hover {
+    border-color: var(--sw-crimson) !important;
+  }
+
+  .ds-card .meta .title,
+  .card-outer .title {
+    color: var(--sw-fg) !important;
+  }
+
+  .ds-card .meta .source,
+  .ds-card .meta .excerpt {
+    color: var(--sw-fg-dim) !important;
+  }
+
+  /* personalize / gear panel */
+  .personalize-button,
+  .icon-settings {
+    fill: var(--sw-fg) !important;
+    color: var(--sw-fg) !important;
+  }
+
+  /* context menus on the newtab page */
+  .context-menu {
+    background-color: var(--sw-bg-deep) !important;
+    color: var(--sw-fg) !important;
+    border: 1px solid var(--sw-crimson-lo, #8f00ff) !important;
+  }
+
+  .context-menu .context-menu-item:hover {
+    background-color: var(--sw-surface) !important;
+  }
+}
+
+/* ── Private browsing page ─────────────────────────────── */
+@-moz-document url(about:privatebrowsing) {
+  body {
+    background: linear-gradient(180deg, #1a0028 0%, #240037 70%, #160b0e 100%) !important;
+    color: #ff7edb !important;
+  }
+
+  .private-browsing-notice,
+  h1, h2, p {
+    color: #ff7edb !important;
+  }
+
+  a {
+    color: #03edf9 !important;
+  }
+
+  button, .button {
+    background-color: #ff7edb !important;
+    color: #240037 !important;
+  }
+}
+
+/* ── Reader mode ───────────────────────────────────────── */
+@-moz-document url-prefix("about:reader") {
+  body {
+    --sw-bg: #240037;
+    --sw-fg: #ff7edb;
+  }
+
+  body.dark {
+    background-color: #1a0028 !important;
+    color: #ff7edb !important;
+  }
+
+  body.dark h1, body.dark h2, body.dark h3 {
+    color: #ffffff !important;
+  }
+
+  body.dark a {
+    color: #03edf9 !important;
+  }
+
+  body.dark blockquote {
+    border-inline-start-color: #ff7edb !important;
+  }
+}

@@ -1,0 +1,119 @@
+#!/usr/bin/env python3
+"""awake-tray: system tray toggle for awake-mode.
+
+Left click toggles. Right click menu: status, toggle, quit.
+Icon name resolves through the session icon theme (candy-icons).
+"""
+import os
+import subprocess
+import sys
+
+from PySide6.QtCore import QTimer
+from PySide6.QtGui import QAction, QIcon
+from PySide6.QtWidgets import QApplication, QMenu, QSystemTrayIcon
+
+AWAKE_MODE = os.path.expanduser("~/.local/bin/awake-mode")
+ICON_FALLBACK_DIR = os.path.expanduser("~/.local/share/icons/candy-icons/status/scalable")
+
+
+def _session_theme() -> str:
+    try:
+        out = subprocess.check_output(
+            ["kreadconfig6", "--file", os.path.expanduser("~/.config/kdeglobals"),
+             "--group", "Icons", "--key", "Theme"],
+            text=True).strip()
+        return out or "candy-icons"
+    except Exception:
+        return "candy-icons"
+
+
+def _init_icon_theme():
+    """Standalone Qt does not inherit the Plasma icon theme. Set it explicitly."""
+    QIcon.setThemeName(_session_theme())
+
+
+def state_on() -> bool:
+    return subprocess.run([AWAKE_MODE, "status"],
+                          stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).returncode == 0
+
+
+def ensure_inhibitor():
+    # revive the sleep-veto if it died (reboot, kill, whatever)
+    subprocess.run([AWAKE_MODE, "ensure"],
+                   stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+
+
+def icon_for(on: bool) -> QIcon:
+    name = "awake-mode-on" if on else "awake-mode-off"
+    ic = QIcon.fromTheme(name)
+    if ic.isNull():  # theme lookup failed; load the forged SVG directly
+        ic = QIcon(os.path.join(ICON_FALLBACK_DIR, name + ".svg"))
+    return ic
+
+
+class AwakeTray:
+    def __init__(self):
+        self.app = QApplication(sys.argv)
+        self.app.setApplicationName("awake-tray")
+        self.app.setQuitOnLastWindowClosed(False)
+
+        _init_icon_theme()
+
+        self.tray = QSystemTrayIcon()
+        self.tray.setToolTip("Awake mode")
+        self.tray.activated.connect(self._activated)
+
+        self.menu = QMenu()
+        self.status_action = QAction()
+        self.status_action.setEnabled(False)
+        self.toggle_action = QAction()
+        self.toggle_action.triggered.connect(self.toggle)
+        quit_action = QAction("Quit")
+        quit_action.triggered.connect(self.app.quit)
+        self.menu.addAction(self.status_action)
+        self.menu.addAction(self.toggle_action)
+        self.menu.addSeparator()
+        self.menu.addAction(quit_action)
+        self.tray.setContextMenu(self.menu)
+
+        ensure_inhibitor()
+        self.refresh()
+        self.tray.show()
+
+        # poll so external flips (fish functions) update the icon
+        self.timer = QTimer()
+        self.timer.timeout.connect(self._tick)
+        self.timer.start(30000)
+
+    def _tick(self):
+        ensure_inhibitor()
+        self.refresh()
+
+    def _activated(self, reason):
+        if reason == QSystemTrayIcon.ActivationReason.Trigger:
+            self.toggle()
+
+    def toggle(self):
+        subprocess.run([AWAKE_MODE, "toggle"], check=False)
+        on = state_on()
+        self.refresh()
+        self.tray.showMessage(
+            "Awake mode",
+            "ON - never sleeps, never locks" if on else "OFF - normal power management",
+            icon_for(on),
+            2500,
+        )
+
+    def refresh(self):
+        on = state_on()
+        self.tray.setIcon(icon_for(on))
+        self.tray.setToolTip(f"Awake mode: {'ON' if on else 'OFF'}")
+        self.status_action.setText(f"State: {'ON (never sleeps)' if on else 'OFF (normal)'}")
+        self.toggle_action.setText("Turn OFF (restore sleep/lock)" if on else "Turn ON (never sleep/lock)")
+
+    def run(self):
+        return self.app.exec()
+
+
+if __name__ == "__main__":
+    sys.exit(AwakeTray().run())

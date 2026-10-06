@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="119.46667" height="29.866667" viewBox="0 0 119.46667 29.866667">
+<g id="active-center" transform="translate(0.0,0)">
+<rect x="8.73333375" y="10.33333375" width="9.4" height="9.4" rx="1.6" fill="#050506" stroke="#FE4450" stroke-width="1.8"/>
+<rect x="11.73333375" y="13.33333375" width="9.4" height="9.4" rx="1.6" fill="#050506" stroke="#FE4450" stroke-width="1.8"/>
+</g>
+<g id="hover-center" transform="translate(29.8666675,0)">
+<rect x="8.73333375" y="10.33333375" width="9.4" height="9.4" rx="1.6" fill="#FF7EDB" stroke="#FE4450" stroke-width="1.8"/>
+<rect x="11.73333375" y="13.33333375" width="9.4" height="9.4" rx="1.6" fill="#FF7EDB" stroke="#FE4450" stroke-width="1.8"/>
+</g>
+<g id="pressed-center" transform="translate(59.733335,0)">
+<rect x="8.73333375" y="10.33333375" width="9.4" height="9.4" rx="1.6" fill="#3A0308" stroke="#7A0D18" stroke-width="1.8"/>
+<rect x="11.73333375" y="13.33333375" width="9.4" height="9.4" rx="1.6" fill="#3A0308" stroke="#7A0D18" stroke-width="1.8"/>
+</g>
+<g id="inactive-center" transform="translate(89.60000249999999,0)">
+<rect x="8.73333375" y="10.33333375" width="9.4" height="9.4" rx="1.6" fill="#240037" stroke="#4B0080" stroke-width="1.8"/>
+<rect x="11.73333375" y="13.33333375" width="9.4" height="9.4" rx="1.6" fill="#240037" stroke="#4B0080" stroke-width="1.8"/>
+</g>
+</svg>

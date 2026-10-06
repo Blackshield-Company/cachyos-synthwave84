@@ -1,0 +1,10 @@
+cachyos-synthwave84
+Copyright 2026 synthalorian
+
+Original theme and installer work in this repository is licensed under
+the Apache License, Version 2.0. See LICENSE.
+
+Vendored components keep their own licenses, including the LICENSE files
+under configs/kde/desktoptheme/Sweet-Ambar-Blue/ and
+configs/plasmoids/AndromedaLauncher/. Fonts under configs/fonts/ stay
+under the upstream SIL Open Font License where that is the upstream license.

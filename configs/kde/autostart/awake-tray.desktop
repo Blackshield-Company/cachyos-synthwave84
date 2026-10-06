@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Application
+Name=Awake Mode Tray
+Comment=Synthwave84 tray toggle for never-sleep/never-lock mode
+Exec=__HOME__/.local/bin/awake-tray
+Icon=awake-mode-on
+X-KDE-autostart-after=panel
