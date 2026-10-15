@@ -1,3 +1,5 @@
+![cachyos-synthwave84](.github/preview.png)
+
 # cachyos-synthwave84
 
 Fresh CachyOS install → the full grid, one script.
